@@ -1,17 +1,17 @@
-import time  #library to add a timer so text is not instantly skipped
-import random
+import time           #library to add a timer so text is not instantly skipped
+import random         #library to randomly select songs for playlist creation
 
-def title_func(song):                                   #this is essentialy a function that will be used to sort the dictionaries within the list. The inputs are the dicts...
-    return song["title"]                                #...and the outputs are the titles of the songs for each dict
+def title_func(song):               #this is essentialy a function that will be used to sort the dictionaries within the list. The inputs are the dicts...
+    return song["title"]            #...and the outputs are the titles of the songs for each dict
 
-def convert_length_s(items):                                             #function to add song times and return back a string, a LIST of STRINGS is needed
-    total_seconds = 0                                                    #counter is set to 0
+def convert_length_s(items):                    #function to add song times and return back a string, a LIST of STRINGS is needed
+    total_seconds = 0                           #counter is set to 0
     for string in items:
         minutes, seconds = string.split(":")                             #the minutes and seconds are split at the : and placed into the corresponding variable (unpacking)
         total_seconds = total_seconds + int(seconds) + int(minutes)*60   #total seconds are added for each song length that is went through
     return total_seconds                                                 #total seconds are returned
 
-def main_menu():   #------------------------------
+def main_menu():   #------------------------------ Main Menu --------------------------
     print("\n-- OCRTunes --")
     print("\n1 : View Profile")
     print("2 : Edit Profile")
@@ -20,10 +20,10 @@ def main_menu():   #------------------------------
     print("5 : View And Edit Playlists")
     print("6 : Save Songs")
     print("E : Exit")
-    choice = input("\nChoice --> ")
-    return choice
+    choice = input("\nChoice --> ")               #main menu function that prints the options and takes the input
+    return choice                                 #returns the choice to be used in the main program
 
-def view_profile():   #------------------------------
+def view_profile():   #------------------------------ View Profile --------------------------
     print("\n-- Profile --")
     print(f"\nUsername: {username}")
     print(f"Date of birth: {date_of_birth}")
@@ -32,38 +32,38 @@ def view_profile():   #------------------------------
     print("\nE : Exit")
     choice = input("\nChoice --> ")
     if choice.lower() == "e":
-        return
+        return                          #returns back outside the function, where it was called
     else:
         print("\nThat's not one of the options...")
         time.sleep(1.5)
-        view_profile()
+        view_profile()                  #if input is not e the function is called again
 
-def edit_profile():   #------------------------------
-    global favourite_artist, favourite_genre
+def edit_profile():   #------------------------------ Edit Profile --------------------------
+    global favourite_artist, favourite_genre                                #these variables are global so they can be changed in the function
     print("\n-- Edit Profile --")
     print("\nWhat would you like to change?")
     print("\n1 : Favourite artist")
     print("2 : Favourite genre")
     print("\nE : Exit")
     choice = input("\nChoice --> ")
-    if choice == "1":
+    if choice == "1":                                                       #if the user wants to change their favourite artist
         favourite_artist = input("\nWho is your new favourite artist?: ")
         print("Changed Successfully")
         time.sleep(1.5)
-        edit_profile()
-    elif choice == "2":
+        edit_profile()                                                      #Goes back to the start of the function
+    elif choice == "2":                                                     #if the user wants to change their favourite genre
         favourite_genre = input("\nWhat is your new favourite genre?: ")
         print("Changed Successfully")
         time.sleep(1.5)
         edit_profile()
     elif choice.lower() == "e":          
-        return    
+        return
     else:
         print("\nThat's not one of the options...")
         time.sleep(1.5)
         edit_profile()
 
-def view_song_library():   #------------------------------
+def view_song_library():   #------------------------------ View Song Library --------------------------
     print("\n-- Song Library --")
     print("")
     sorted_songs = sorted(song_library, key = title_func)                    #key requires a function which I defined before. Every dictionary in song_library (input) is sorted using the titles of the songs (output) for which the key states (so song_library[0 to 19] are sorted in alphabetical order of song_library[0 to 19]["title"] hence the function). Found on https://www.w3schools.com/python/ref_func_sorted.asp very helpful.
@@ -77,9 +77,9 @@ def view_song_library():   #------------------------------
     else:
         print("\nThat's not one of the options...")
         time.sleep(1.5)
-        view_song_library()
+        view_song_library()                                                  #if input is not e the function is back to the start
 
-def create_playlist():   #------------------------------
+def create_playlist():   #------------------------------ Create A Playlist --------------------------
     global playlists
     print("\n-- Create A Playlist --")
     print("\n1 : Create Via Time Limit")
@@ -88,38 +88,36 @@ def create_playlist():   #------------------------------
     print("\nE : Exit")
     choice = input("\nChoice --> ")
     
-    if choice == "1":
+    if choice == "1":                                              #option to create a playlist via time limit
 
         print("\n-- Create Playlist With Time Limit --")
-        playlist_name = input("\nName of the playlist: ")
-        while playlist_name in playlists.keys():
+        playlist_name = input("\nName of the playlist: ")          #takes the name of the playlist
+        while playlist_name in playlists.keys():                   #checks if that name already exists in the playlists dictionary
             print("\nThis Playlist Already exists...")
             time.sleep(1.5)
             playlist_name = input("\nName of the playlist: ")
-        playlist_time_limit_s = int(input("Length of the playlist in minutes: ")) * 60
-        min_length = min(convert_length_s([song["length"]]) for song in song_library)
-        max_length = max(convert_length_s([song["length"]]) for song in song_library)
-        while playlist_time_limit_s <= min_length or playlist_time_limit_s >= max_length * len(song_library):
+        playlist_time_limit_s = int(input("Length of the playlist in minutes: ")) * 60              #takes the length of the playlist and converts it to seconds
+        min_length = min(convert_length_s([song["length"]]) for song in song_library)               #finds the shortest song in the library and converts it to seconds
+        max_length = convert_length_s([song["length"] for song in song_library])                    #finds the total length of all songs in the library and converts it to seconds
+        while playlist_time_limit_s <= min_length or playlist_time_limit_s >= max_length:           #checks if the input works
             print("\nPlaylist cannot be made...")
             time.sleep(1.5)
-            playlist_time_limit_s = int(input("\nLength of the playlist in minutes: ")) * 60
-        playlist_songs = []
-        playlist_length_s = 0
-        while playlist_length_s < playlist_time_limit_s:
-            temp_song = random.choice(song_library)
-            if temp_song not in playlist_songs:
-                temp_length = playlist_length_s + convert_length_s([temp_song["length"]])
-                if temp_length <= playlist_time_limit_s:
-                    playlist_songs.append(temp_song)
-                    playlist_length_s = temp_length
-                else:
-                    break
-        song_times = [times["length"] for times in playlist_songs]
-        playlist_length_s = convert_length_s(song_times)
-        playlists.update({playlist_name : {"songs" : playlist_songs , "length" : f"{playlist_length_s // 60}:{playlist_length_s % 60:02d}" , "num_songs" : int(len(playlist_songs))}})     #updates the playlists dictionary with a new playlist with the key for it being its name
+            playlist_time_limit_s = int(input("\nLength of the playlist in minutes: ")) * 60        
+        playlist_songs = []                                                                     #creates an empty list to store the songs that will be in the playlist
+        playlist_length_s = 0                                                                   #counter for the length of the playlist in seconds
+        while playlist_length_s < playlist_time_limit_s:                                        #while the length of the playlist is less than the time limit
+            temp_song = random.choice(song_library)                                             #randomly selects a song from the library
+            if temp_song not in playlist_songs:                                                 #checks if that song is already in the playlist...
+                temp_length = playlist_length_s + convert_length_s([temp_song["length"]])       #... if it is, calculates the length of the playlist if that song was added
+                if temp_length <= playlist_time_limit_s:                                        #if that length is less than the time limit...
+                    playlist_songs.append(temp_song)                                            #...the song is added to the playlist...
+                    playlist_length_s = temp_length                                             #...and the length counter is updated
+                else:                                                              #if the length is more than the time limit...
+                    break                                                          #...the loop is broken
+        playlists.update({playlist_name : {"songs" : playlist_songs , "length" : f"{playlist_length_s // 60}:{playlist_length_s % 60:02d}" , "num_songs" : int(len(playlist_songs))}})     #updates the playlists dictionary with a new playlist, with the key for it being its name
         print("\nCreated Successfully")
         time.sleep(1.5)
-        create_playlist()
+        create_playlist()                #goes back to the start of the function
 
     elif choice == "2":
         print()
@@ -132,22 +130,23 @@ def create_playlist():   #------------------------------
     elif choice.lower() == "e":
         return
 
-def view_delete_playlists():   #------------------------------
+def view_delete_playlists():   #------------------------------ View And Delete Playlists --------------------------
     global playlists
-    print("\n-- View And Edit Playlists --")
-    if not playlists:                                       #checks if there are any playlists
-        print("\nYou have no playlists!")
-    else:
+    print("\n-- View And Delete Playlists --")
+    if not playlists:                                     #checks if there are any playlists
+        print("\nYou have no playlists!")                 
+    else:                                                 #if there are playlists
         print("\nHere are all your playlists")
         print("Type it's name if you wish to view it")
         print("")
-        for playlist in playlists:
-            print(f"{playlist} : View Or Edit")
+        for playlist in playlists:                        #a loop to go through all the playlists in the playlists dictionary
+            print(f"{playlist} : View Or Delete")         #lists all the playlists that exist
+            time.sleep(0.1)
     print("\nE : Exit")
     choice = input("\nChoice --> ")
-    playlist_title = choice
+    playlist_title = choice                               #the title is stored in playlist_title to be used later as choice changes
 
-    if playlist_title in playlists.keys():
+    if playlist_title in playlists.keys():                #if the input is one of the existing playlists
 
         print(f"\n-- {playlist_title} --")
         time.sleep(0.5)
@@ -158,7 +157,7 @@ def view_delete_playlists():   #------------------------------
         time.sleep(0.5)
         print("")
         for song in playlists[playlist_title]['songs']:                            #a loop to list all the songs that are in the playlist
-            print(f"{song['title']} by {song['artist']} - {song['length']}")
+            print(f"{song['title']} by {song['artist']} - {song['length']}")       #prints the relevant information for each song
             time.sleep(0.1)
         print("\n1 : Delete This Playlist")
         print("\nE : Exit")
@@ -167,7 +166,7 @@ def view_delete_playlists():   #------------------------------
         if choice == "1":                                    #option to delete a playlist
 
             print("\n-- Deleting A Playlist --")
-            print("\nAre You Sure?")                         #double checks
+            print("\nAre You Sure?")                         #double checks with the user
             print("\n1 : Yes")
             print("2 : No")
             choice = input("\nChoice --> ")
@@ -176,31 +175,32 @@ def view_delete_playlists():   #------------------------------
                 print("\nDeletion Succcessful")              #goes to the previous menu as that playlist does not exist anymore
                 time.sleep(1.5)
                 view_delete_playlists()
-            elif choice == "2":                              #cancels the deletion
+            elif choice == "2":                              #cancels the deletion 
                 print("\nDeletion Aborted")
                 time.sleep(1.5)
-                view_delete_playlists()
-            else:                                                                #brings the user back to  the playlist menu to make sure no accidents happen
-                print("\nThat's not one of the options... Deletion Aborted")
+                view_delete_playlists()                      #goes back to the start of the function
+            else:
+                print("\nThat's not one of the options... Deletion Aborted")     #if the input is not 1 or 2 the deletion is aborted
                 time.sleep(1.5)
                 view_delete_playlists()
 
         elif choice.lower() == "e":                        #exit the playlist menu
-            return
+            view_delete_playlists()
 
-        else:
+        else:                                              #if the input is not one of the options
             print("\nThat's not one of the options...")
             time.sleep(1.5)
             view_delete_playlists()
 
-    elif choice.lower() == "e":                             #exit  
+    elif choice.lower() == "e":              #exit the playlist menu
         return 
 
-def save_songs():   #------------------------------
+def save_songs():   #------------------------------ Save Songs --------------------------
     return
 
-def exit_program():   #------------------------------
-    print(f"\nBuh Bye {username}!\n")     #says bye to the user
+def exit_program():   #------------------------------ Exit Program --------------------------
+    print(f"\nBuh Bye {username}!\n")     #says bye to the user using their username
+    time.sleep(1.5)
     return
 
 
@@ -242,12 +242,13 @@ while date_of_birth == "":
 favourite_artist = input("Who is your favourite artist?: ")
 favourite_genre = input("What is your favourite genre?: ")
 
-choice = main_menu()
-while choice.lower() != "e":
+choice = main_menu()   # ---------------- Start of the main menu loop ----------------
+
+while True:
     if choice == "1":
 
         view_profile()
-        choice = main_menu()
+        choice = main_menu()          #after the function is done, the main menu function is used again to get a new choice
 
     elif choice == "2":
 
@@ -273,8 +274,13 @@ while choice.lower() != "e":
 
         save_songs()
         choice = main_menu()
+
+    elif choice.lower() == "e":
+
+        exit_program()               #runs any exit code before breaking the loop
+        break
         
     else:
         print("\nThat's not one of the options...")
         time.sleep(1.5)
-        choice = main_menu()
+        choice = main_menu()         #if the input is not one of the options main_menu() is repeated
