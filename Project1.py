@@ -220,7 +220,7 @@ def view_delete_playlists():   #------------------------------ View And Delete P
                 continue
 
         elif choice.lower() == "e":              #exit the playlist menu
-            return 
+            return
 
 def save_songs():   #------------------------------ Save Songs --------------------------
 
@@ -229,53 +229,55 @@ def save_songs():   #------------------------------ Save Songs -----------------
         print("\nType the name of the artist whose songs you wish to save to a file")
         print("Here are all the artists in the song library:")
         print("")
-        artists = {song["artist"] for song in song_library}
+        artists = {song["artist"] for song in song_library}        #creates a set of all the artists in the song library, sets automatically remove duplicates
 
-        for name in artists:
+        for name in artists:               #a loop to go through all the artists in the set
             print(f"- {name}")
         print("\nE : Exit")
         choice = input("\nChoice --> ")
-        artist_name = choice
+        artist_name = choice               #the name is stored in artist_name to be used later as choice changes
 
-        if artist_name in artists:
+        if artist_name in artists:         #if the input is one of the existing artists
 
             print("\n-- File Creation --")       
-            print("\nThe current file WILL BE OVERWRITTEN, continue?")
+            print("\nThe current file WILL BE OVERWRITTEN, continue?")   #double checks
             print("\n1 : Yes")
             print("2 : No")
             choice = input("\nChoice --> ")
-            if choice == "2":
+            if choice == "2":                                            #cancels the file creation for 2
                 print("\nAborted...")
                 time.sleep(1.5)
                 continue
-            elif choice != "2" and choice != "1":
+            elif choice != "2" and choice != "1":                        #cancels everything else other than 1      
                 print("\nThat's not one of the options... Aborted")
                 time.sleep(1.5)
                 continue
 
-            try:
+            try:                                         #tries to create a new file
                 export = open("export.txt", "x")
-            except FileExistsError:
+            except FileExistsError:                      #if the file already exists it opens it in write mode
                 export = open("export.txt", "w")
 
-            export.write(f"-- {artist_name} --\n\n")
-            for songs in [song for song in song_library if song["artist"] == artist_name]:
-                export.write(f"{songs['title']} - {songs['genre']} - {songs['length']} minutes\n")
+            export.write(f"-- {artist_name} --\n\n")                                                 #writes the artist name as a title in the file
+            for songs in [song for song in song_library if song["artist"] == artist_name]:           #a loop to go through all the songs in the library that match the input artist
+                export.write(f"{songs['title']} - {songs['genre']} - {songs['length']} minutes\n")   #writes the information for each song in the file
 
-            export.close()
-            print("\nFile Creation Successful")
+            export.close()                           #closes the file
+            print("\nFile Creation Successful")      #informs the user that the file was created
             time.sleep(1.5)
+            continue                                 #goes back to the start of the function                          
         
         elif choice.lower() == "e":
             return
         
-        else:
+        else:                                                 #if the input is not one of the options
             print("\nThat's not one of the options...")
+            time.sleep(1.5)
+            continue
 
 def exit_program():   #------------------------------ Exit Program --------------------------
 
     print(f"\nBuh Bye {username}!\n")     #says bye to the user using their username
-    time.sleep(1.5)
     return
 
 
@@ -361,3 +363,13 @@ while True:
         print("\nThat's not one of the options...")
         time.sleep(1.5)
         choice = main_menu()         #if the input is not one of the options main_menu() is repeated
+
+
+
+####################################### Notes #######################################
+
+# Continue will always go back to the start of the loop it is in, break will exit the loop it is in
+# True loops are used so the memory does not get overloaded with function calls
+# globals are used to changes variables in functions
+# classes could be used, a bit too complicated for my liking
+# functions make edits easier and cleaner
