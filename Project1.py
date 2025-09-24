@@ -152,8 +152,8 @@ while True:                           #While True loop keeps the section running
                     time.sleep(1.5)
                     playlist_name = input("\nName of the playlist: ")
                 playlist_time_limit_s = int(input("Length of the playlist in minutes: ")) * 60             #gets the requested length of the playlist in seconds
-                while playlist_time_limit_s <= 180 or playlist_time_limit_s >= 6221:                       #checks if a playlist can be made
-                    print("\nPlaylist cannot be made...")
+                while playlist_time_limit_s <= 185 or playlist_time_limit_s >= 693:                       #checks if playlist length is between shortest (3:05) and longest (11:33) song
+                    print("\nPlaylist length must be between 3:05 and 11:33 minutes...")
                     time.sleep(1.5)
                     playlist_time_limit_s = int(input("\nLength of the playlist in minutes: ")) * 60
                 playlist_songs = []                                                                    #initial empty list for the songs
