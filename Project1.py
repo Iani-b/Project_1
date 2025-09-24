@@ -373,3 +373,5 @@ while True:
 # globals are used to changes variables in functions
 # classes could be used, a bit too complicated for my liking
 # functions make edits easier and cleaner
+# Placeholders are being used
+# try excepts are used to prevent crashes
