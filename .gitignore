@@ -1,0 +1,85 @@
+# ===== PYTHON COMPILED FILES =====
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ===== VIRTUAL ENVIRONMENTS =====
+venv/
+env/
+.venv/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+# ===== IDE AND EDITOR FILES =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ===== OPERATING SYSTEM FILES =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===== PYTHON PACKAGING =====
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ===== PYINSTALLER =====
+*.manifest
+*.spec
+
+# ===== TESTING AND COVERAGE =====
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# ===== JUPYTER NOTEBOOKS =====
+.ipynb_checkpoints
+
+# ===== ENVIRONMENT VARIABLES =====
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ===== DATABASES =====
+*.db
+*.sqlite3
+
+# ===== LOG FILES =====
+*.log
+
+# ===== PROJECT-SPECIFIC FILES =====
+export.txt
+config.json
+data/
