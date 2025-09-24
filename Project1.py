@@ -351,4 +351,4 @@ while True:                           #While True loop keeps the section running
         print("\nThat's not one of the options...")
         time.sleep(1.5)
 
-#not done yet also testing git, also final testing, also need to replace everything with functions
+#not done yet also testing git, also final testing, also need to replace everything with functions. no loops
