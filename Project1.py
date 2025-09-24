@@ -22,6 +22,93 @@ def convert_length_s(items):                                             #functi
         total_seconds = total_seconds + int(seconds) + int(minutes)*60   #total seconds are added for each song length that is went through
     return total_seconds                                                 #total seconds are returned
 
+def main_menu():
+    print("\n-- OCRTunes --")         #\n is use d to move onto the next line, I find it easier
+    print("\n1 : View Profile")
+    print("2 : Edit Profile")
+    print("3 : View Song Library")
+    print("4 : Create A Playlist")
+    print("5 : View And Edit Playlists")
+    print("6 : Save Songs")
+    print("E : Exit")
+    choice = input("\nChoice --> ")            #Asks the user to which menu they want to go to and sets that as the choice
+    return choice
+
+def view_profile():
+    while True:                            #kept running until quit
+        print("\n-- Profile --")
+        print(f"\nUsername: {username}")                  #f statments just to make everything look a lot cleaner
+        print(f"Date of birth: {date_of_birth}")
+        print(f"Favourite artist: {favourite_artist}")
+        print(f"Favourite genre: {favourite_genre}")
+        print("\nE : Exit")
+        choice = input("\nChoice --> ")
+        if choice.lower() == "e":               #doesnt matter if e is capital or not
+            break                                        #breaks the inner loop, so it goes to the previous menu
+        else:                                             #random inputs, will return saying you did something wrong
+            print("\nThat's not one of the options...")
+            time.sleep(1.5)                                 #waits a bit so you can read about how you cant type to save your life
+
+def edit_profile():
+    while True:
+        print("\n-- Edit Profile --")
+        print("\nWhat would you like to change?")
+        print("\n1 : Favourite artist")
+        print("2 : Favourite genre")
+        print("\nE : Exit")
+        choice = input("\nChoice --> ")             #decides what is going to be changed
+
+        if choice == "1":                           #menu to change the favourite artist
+
+            favourite_artist = input("\nWho is your new favourite artist?: ")        #basic input for the variable
+            print("Changed Successfully")                                            #not really needed but looks nice
+            time.sleep(1.5)                                                          #gives you time to read the nice looking text
+
+        elif choice == "2":                                                          #menu to change favourite genre    
+
+            favourite_genre = input("\nWhat is your new favourite genre?: ")         #basic input
+            print("Changed Successfully")                                            #fancy text
+            time.sleep(1.5)                          #time for the fancy text
+
+        elif choice.lower() == "e":          
+                break                                 #back to the main menu           
+        else:
+            print("\nThat's not one of the options...")            #whoopsie daisy
+            time.sleep(1.5)                                        #admire the dismissive text for a whole 1.5 seconds
+
+def view_song_library():
+    while True:
+        print("\n-- Song Library --")
+        print("")
+        sorted_songs = sorted(song_library, key = title_func)                    #key requires a function which I defined before. Every dictionary in song_library (input) is sorted using the titles of the songs (output) for which the key states (so song_library[0 to 19] are sorted in alphabetical order of song_library[0 to 19]["title"] hence the function). Found on https://www.w3schools.com/python/ref_func_sorted.asp very helpful.
+        for song in sorted_songs:                                                #this for statement will then go through every dictionary within the sorted list in order...
+            print(f"{song['title']} by {song['artist']} - {song['length']}")     #...and print the relevant information using f statements for each loop (dictionary)
+            time.sleep(0.1)
+        print("\nE : Exit")
+        choice = input("\nChoice --> ")                                        #realistically only one choice
+
+        if choice.lower() == "e":
+            break                                                              #goes back to the main menu
+
+        else:
+            print("\nThat's not one of the options...")
+            time.sleep(1.5)
+
+def create_playlist():
+    return
+
+def view_delete_playlists():
+    return
+
+def save_songs():
+    return
+
+def exit_program():
+    print(f"\nBuh Bye {username}!\n")     #says bye to the user
+    return
+
+
+
 song_library = [   #Song library in a dictionary in a list, took a fair bit to write
     {"title": "Tears", "artist": "Skrillex", "genre": "Electronic", "length": "3:45"},            #1st song
     {"title": "Dope", "artist": "Skrillex", "genre": "Electronic", "length": "3:35"},             #2nd
