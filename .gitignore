@@ -80,6 +80,7 @@ coverage.xml
 *.log
 
 # ===== PROJECT-SPECIFIC FILES =====
+users.json
 export.txt
 config.json
 data/

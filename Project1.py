@@ -1,3 +1,4 @@
+import json
 import time           #library to add a timer so text is not instantly skipped
 import random         #library to randomly select songs for playlist creation
 
@@ -10,6 +11,42 @@ def convert_length_s(items):                    #function to add song times and 
         minutes, seconds = string.split(":")                             #the minutes and seconds are split at the : and placed into the corresponding variable (unpacking)
         total_seconds = total_seconds + int(seconds) + int(minutes)*60   #total seconds are added for each song length that is went through
     return total_seconds                                                 #total seconds are returned
+
+def startup():   #------------------------------ Startup --------------------------
+
+    global username, password, favourite_artist, favourite_genre, date_of_birth   #these variables are global so they can be used in the main program
+
+    print("\n-- Welcome to OCRTunes --")
+    print("\n Login or Sign Up?")
+    print("\n1 : Sign Up")
+    print("2 : Login")
+    choice = input("\nChoice --> ")
+    while choice != "1" and choice != "2":
+        print("\nThat's not one of the options...")
+        time.sleep(1.5)
+        choice = input("\nChoice --> ")
+    if choice == "1":
+        with open("users.json", "r+") as users_json:
+            try:
+                users = json.load(users_json)
+            except json.decoder.JSONDecodeError:
+                users = []
+            username = input("\nUsername: ")
+            while username == "" or username in [dictionary["username"] for dictionary in users]:
+                print("\nThis Username is not valid or already exists...")
+                time.sleep(1.5)
+                username = input("\nUsername: ")
+            password = input("Password: ")
+            while password == "":
+                print("\nPassword cannot be blank...")
+                time.sleep(1.5)
+                password = input("Password")
+            date_of_birth = input("What is your date of birth (DD/MM/YYYY): ")
+            favourite_artist = input("Who is your favourite artist: ")
+            favourite_genre = input("What is your favourite genre")
+
+            
+
 
 def main_menu():   #------------------------------ Main Menu --------------------------
 
@@ -307,19 +344,7 @@ song_library = [   #Song library in a dictionary in a list, took a fair bit to w
 
 playlists = {}  #dictionary that will contain all created playlists
 
-
-
-print("\nWelcome to OCRTunes")
-username = input("What will be your username?: ")
-while username == "":
-    print("\nIt can't be blank...")
-    username = input("What will be your username?: ")
-date_of_birth = input("What is your date of birth?: ")
-while date_of_birth == "":
-    print("\nIt can't be blank...")
-    date_of_birth = input("What is your date of birth?: ")
-favourite_artist = input("Who is your favourite artist?: ")
-favourite_genre = input("What is your favourite genre?: ")
+startup()               #runs the startup function to get user details
 
 choice = main_menu()   # ---------------- Start of the main menu loop ----------------
 
