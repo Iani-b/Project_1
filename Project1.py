@@ -86,8 +86,8 @@ def startup():   #------------------------------ Startup -----------------------
                 time.sleep(1.5)
                 print("Loading Data...")
                 date_of_birth = users[username]["date_of_birth"]      #loads the user date of birth
-                favourite_artist = users[username].get("artist", "")  #loads the user artist, if it does not exist it creates an empty string
-                favourite_genre = users[username].get("genre", "")    #loads the user genre, if it does not exist it creates an empty string
+                favourite_artist = users[username].get("artist", "")  #loads the user's fav artist, if it does not exist it creates an empty string
+                favourite_genre = users[username].get("genre", "")    #loads the user's fav genre, if it does not exist it creates an empty string
                 playlists = users[username].get("playlists", {})      #gets the playlists dictionary for that user, if it does not exist it creates an empty one
                 time.sleep(1.5)
                 break
