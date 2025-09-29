@@ -1,4 +1,4 @@
-import json
+import json           #library to read and write json files
 import time           #library to add a timer so text is not instantly skipped
 import random         #library to randomly select songs for playlist creation
 
@@ -14,81 +14,81 @@ def convert_length_s(items):                    #function to add song times and 
 
 def startup():   #------------------------------ Startup --------------------------
 
-    global username, favourite_artist, favourite_genre, date_of_birth, playlists   #these variables are global so they can changed
+    global username, favourite_artist, favourite_genre, date_of_birth, playlists   #these variables are global so they can be changed
     print("\n-- Welcome to OCRTunes --")
     while True:
-        print("\nLogin or Sign Up?")
+        print("\nLogin or Sign Up?")                
         print("\n1 : Sign Up")
         print("2 : Login")
-        choice = input("\nChoice --> ")
-        while choice != "1" and choice != "2":
+        choice = input("\nChoice --> ")                   
+        while choice != "1" and choice != "2":               #input validation
             print("\nThat's not one of the options...")
             time.sleep(1.5)
             choice = input("\nChoice --> ")
-        if choice == "1":
+        if choice == "1":                                    #option to sign up
             
             try:
-                with open("users.json", "r") as users_json:
-                    users = json.load(users_json)
-            except (FileNotFoundError, json.decoder.JSONDecodeError):
+                with open("users.json", "r") as users_json:              #tries to open the json file to read the existing users
+                    users = json.load(users_json)                        #loads the json file into a dictionary
+            except (FileNotFoundError, json.decoder.JSONDecodeError):    #if the file does not exist or is empty it creates an empty json file and an empty dictionary
                 with open("users.json", "w") as users_json:
                     pass
-                users = {}
+                users = {}                                               #empty dictionary
 
             username = input("\nEnter Your Username: ")
-            while username == "" or username in users:
+            while username == "" or username in users:                   #checks if the username is valid and does not already exist
                 print("\nUsername is invalid or already exists...")
                 time.sleep(1.5)
                 username = input("\nEnter Your Username: ")
             password = input("Enter Your Password: ")
-            while password == "":
+            while password == "":                                        #checks if the password is valid
                 print("\nPassword is invalid...")
                 password = input("\nEnter Your Password: ")
             date_of_birth = input("What is your date of birth (DD/MM/YYYY): ")
             favourite_artist = input("Who is your favourite artist?: ")
             favourite_genre = input("What is your favourite genre?: ")
 
-            users.update({username : {"password" : password , "date_of_birth" : date_of_birth , "artist" : favourite_artist , "genre" : favourite_genre , "playlists" : {}}})
+            users.update({username : {"password" : password , "date_of_birth" : date_of_birth , "artist" : favourite_artist , "genre" : favourite_genre , "playlists" : {}}})  #updates the users dictionary with a new user, with the key for it being their username
 
-            with open("users.json", "w") as users_json:
-                json.dump(users, users_json, indent = 4)
+            with open("users.json", "w") as users_json:        #opens the json file in write mode to overwrite it with the new users dictionary   
+                json.dump(users, users_json, indent = 4)       #dumps the users dictionary into the json file with 4 spaces for readability
             break
 
-        elif choice == "2":
+        elif choice == "2":                  #option to log in
 
             try:
-                with open("users.json", "r") as users_json:
+                with open("users.json", "r") as users_json:               #tries to open the json file to read the existing users
                     users = json.load(users_json)
-            except (FileNotFoundError, json.decoder.JSONDecodeError):
+            except (FileNotFoundError, json.decoder.JSONDecodeError):     #if the file does not exist it creates an empty dictionary and tells them to sign up
                 print("\nPlease Create an account...")
                 users = {}
                 time.sleep(1.5)
-                continue
+                continue              #goes back to the start of the login/signup loop
 
             username = input("\nEnter Your Username: ")
-            if username not in users:
+            if username not in users:                               #if the username does not exist in the users dictionary
                 print("\nThis account does not exist...")
                 time.sleep(1.5)
-                continue
+                continue                                   #goes back to the start of the login/signup loop
             password = input("Enter Your Password: ")
             try_count = 0
-            while password != users[username]["password"]:
+            while password != users[username]["password"]:          #if the password is incorrect
                 print("\nIncorrect Password...")
                 time.sleep(1.5)
-                try_count += 1
-                if try_count == 3:
+                try_count += 1                                                       #counter to limit the number of tries
+                if try_count == 3:                                                   #after 3 failed attempts the login is aborted
                     print("\nToo many failed attempts. Returning to main menu...")
                     time.sleep(1.5)
-                    break
+                    break                                                           #breaks out of the password while loop and goes back to the start of the login/signup loop
                 password = input("\nEnter Your Password: ")
-            if password == users[username]["password"]:
+            if password == users[username]["password"]:             #if the password is correct
                 print("\nWelcome Back!")
                 time.sleep(1.5)
                 print("Loading Data...")
-                date_of_birth = users[username]["date_of_birth"]
-                favourite_artist = users[username]["artist"]
-                favourite_genre = users[username]["genre"]
-                playlists = users[username].get("playlists", {})
+                date_of_birth = users[username]["date_of_birth"]      #loads the user date of birth
+                favourite_artist = users[username].get("artist", "")  #loads the user artist, if it does not exist it creates an empty string
+                favourite_genre = users[username].get("genre", "")    #loads the user genre, if it does not exist it creates an empty string
+                playlists = users[username].get("playlists", {})      #gets the playlists dictionary for that user, if it does not exist it creates an empty one
                 time.sleep(1.5)
                 break
 
@@ -135,23 +135,23 @@ def edit_profile():   #------------------------------ Edit Profile -------------
         if choice == "1":                                                       #if the user wants to change their favourite artist
             favourite_artist = input("\nWho is your new favourite artist?: ")
             with open("users.json", "r") as users_json:
-                users = json.load(users_json)
+                users = json.load(users_json)                         #opens the json file in read mode and loads it into a dictionary
             
-            users[username]["artist"] = favourite_artist
+            users[username]["artist"] = favourite_artist              #updates the users dictionary with the new favourite artist
             
             with open("users.json", "w") as users_json:
-                json.dump(users, users_json, indent = 4)
+                json.dump(users, users_json, indent = 4)              #opens the json file in write mode and dumps the updated users dictionary into it
             print("Changed Successfully")
             time.sleep(1.5)
-            continue                                                      #Goes back to the start of the function
+            continue                                                            #Goes back to the start of the function
         elif choice == "2":                                                     #if the user wants to change their favourite genre
             favourite_genre = input("\nWhat is your new favourite genre?: ")
             with open("users.json", "r") as users_json:
-                users = json.load(users_json)
+                users = json.load(users_json)                    #opens the json file in read mode and loads it into a dictionary
             
-            users[username]["genre"] = favourite_genre
+            users[username]["genre"] = favourite_genre           #updates the users dictionary with the new favourite genre
             
-            with open("users.json", "w") as users_json:
+            with open("users.json", "w") as users_json:         #opens the json file in write mode and dumps the updated users dictionary into it
                 json.dump(users, users_json, indent = 4)            
             print("Changed Successfully")
             time.sleep(1.5)
@@ -381,12 +381,12 @@ def exit_program():   #------------------------------ Exit Program -------------
 def save_json_playlist():   #------------------------------- Save Playlists To JSON --------------------------
 
     with open("users.json", "r") as users_json:
-        users = json.load(users_json)
+        users = json.load(users_json)                #opens the json file in read mode and loads it into a dictionary
             
-    users[username]["playlists"] = playlists
+    users[username]["playlists"] = playlists         #updates the users dictionary with the new playlists dictionary
             
-    with open("users.json", "w") as users_json:
-        json.dump(users, users_json, indent = 4)
+    with open("users.json", "w") as users_json:     
+        json.dump(users, users_json, indent = 4)     #opens the json file in write mode and dumps the updated users dictionary into it
 
 
 song_library = [   #Song library in a dictionary in a list, took a fair bit to write
@@ -464,7 +464,7 @@ while True:
 
 ####################################### Notes #######################################
 
-# Continue will always go back to the start of the loop it is in, break will exit the loop it is in
+# Continue will always go back to the start of the loop it is in, break will exit the loop it is in (with exceptions)
 # True loops are used so the memory does not get overloaded with function calls
 # globals are used to changes variables in functions
 # classes could be used, a bit too complicated for my liking
