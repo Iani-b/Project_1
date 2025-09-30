@@ -52,6 +52,9 @@ def startup():   #------------------------------ Startup -----------------------
 
             with open("users.json", "w") as users_json:        #opens the json file in write mode to overwrite it with the new users dictionary   
                 json.dump(users, users_json, indent = 4)       #dumps the users dictionary into the json file with 4 spaces for readability
+                
+                print("\nAccount Created!")
+                time.sleep(1.5)
             break
 
         elif choice == "2":                  #option to log in
