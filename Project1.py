@@ -14,13 +14,13 @@ def convert_length_s(items):                    #function to add song times and 
 
 def startup():   #------------------------------ Startup --------------------------
 
-    global username, favourite_artist, favourite_genre, date_of_birth, playlists   #these variables are global so they can be changed
+    data = {}
     print("\n-- Welcome to OCRTunes --")
     while True:
         print("\nLogin or Sign Up?")                
         print("\n1 : Sign Up")
         print("2 : Login")
-        choice = input("\nChoice --> ")                   
+        choice = input("\nChoice --> ")                  
         while choice != "1" and choice != "2":               #input validation
             print("\nThat's not one of the options...")
             time.sleep(1.5)
@@ -44,18 +44,20 @@ def startup():   #------------------------------ Startup -----------------------
             while password == "":                                        #checks if the password is valid
                 print("\nPassword is invalid...")
                 password = input("\nEnter Your Password: ")
-            date_of_birth = input("What is your date of birth (DD/MM/YYYY): ")
-            favourite_artist = input("Who is your favourite artist?: ")
-            favourite_genre = input("What is your favourite genre?: ")
+            data["date_of_birth"] = input("What is your date of birth (DD/MM/YYYY): ")
+            data["favourite_artist"] = input("Who is your favourite artist?: ")
+            data["favourite_genre"] = input("What is your favourite genre?: ")
+            data["username"] = username
 
-            users.update({username : {"password" : password , "date_of_birth" : date_of_birth , "artist" : favourite_artist , "genre" : favourite_genre , "playlists" : {}}})  #updates the users dictionary with a new user, with the key for it being their username
+            users.update({username : {"password" : password , "date_of_birth" : data["date_of_birth"] , "favourite_artist" : data["favourite_artist"] , "favourite_genre" : data["favourite_genre"] , "playlists" : {}}})  #updates the users dictionary with a new user, with the key for it being their username
 
             with open("users.json", "w") as users_json:        #opens the json file in write mode to overwrite it with the new users dictionary   
                 json.dump(users, users_json, indent = 4)       #dumps the users dictionary into the json file with 4 spaces for readability
                 
                 print("\nAccount Created!")
                 time.sleep(1.5)
-            break
+
+                return data
 
         elif choice == "2":                  #option to log in
 
@@ -88,12 +90,14 @@ def startup():   #------------------------------ Startup -----------------------
                 print("\nWelcome Back!")
                 time.sleep(1.5)
                 print("Loading Data...")
-                date_of_birth = users[username]["date_of_birth"]      #loads the user date of birth
-                favourite_artist = users[username].get("artist", "")  #loads the user's fav artist, if it does not exist it creates an empty string
-                favourite_genre = users[username].get("genre", "")    #loads the user's fav genre, if it does not exist it creates an empty string
-                playlists = users[username].get("playlists", {})      #gets the playlists dictionary for that user, if it does not exist it creates an empty one
+                data["date_of_birth"] = users[username]["date_of_birth"]      #loads the user date of birth
+                data["favourite_artist"] = users[username].get("favourite_artist", "")  #loads the user's fav artist, if it does not exist it creates an empty string
+                data["favourite_genre"] = users[username].get("favourite_genre", "")    #loads the user's fav genre, if it does not exist it creates an empty string
+                data["playlists"] = users[username].get("playlists", {})      #gets the playlists dictionary for that user, if it does not exist it creates an empty one
+                data["username"] = username
                 time.sleep(1.5)
-                break
+                
+                return data
 
 def main_menu():   #------------------------------ Main Menu --------------------------
 
@@ -418,7 +422,8 @@ song_library = [   #Song library in a dictionary in a list, took a fair bit to w
 playlists = {}  #dictionary that will contain all created playlists
 
 
-startup()       #runs the startup function to get user details
+data = startup()       #runs the startup function to get user details
+username, date_of_birth, favourite_artist, favourite_genre, playlists = data.get("username", ""), data.get("date_of_birth", ""), data.get("favourite_artist", ""), data.get("favourite_genre", ""), data.get("playlists", {})   #unpacking the returned dictionary into the relevant variables, if they do not exist they are set to empty strings or an empty dictionary for playlists
 
 choice = main_menu()   # ---------------- Start of the main menu loop ----------------
 
