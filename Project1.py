@@ -144,7 +144,7 @@ def edit_profile():   #------------------------------ Edit Profile -------------
             with open("users.json", "r") as users_json:
                 users = json.load(users_json)                         #opens the json file in read mode and loads it into a dictionary
             
-            users[username]["artist"] = favourite_artist              #updates the users dictionary with the new favourite artist
+            users[username]["favourite_artist"] = favourite_artist              #updates the users dictionary with the new favourite artist
             
             with open("users.json", "w") as users_json:
                 json.dump(users, users_json, indent = 4)              #opens the json file in write mode and dumps the updated users dictionary into it
