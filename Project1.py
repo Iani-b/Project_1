@@ -248,8 +248,29 @@ def create_playlist():   #------------------------------ Create A Playlist -----
             continue                #goes back to the start of the function
 
         elif choice == "2":
-            print()
-            continue
+            
+            print("\n-- Create Playlist With Genre --")
+            playlist_name = input("\nName of the playlist: ")          #takes the name of the playlist
+            while playlist_name in playlists.keys():                   #checks if that name already exists in the playlists dictionary
+                print("\nThis Playlist Already exists...")
+                time.sleep(1.5)
+                playlist_name = input("\nName of the playlist:")
+
+            print("")
+            genre = {song["genre"] for song in song_library}
+            for name in genre:
+                print(f"- {name}")
+            
+            playlist_genre = input("\nSelect desired genre: ")
+            
+            while playlist_genre not in genre:
+                print("\nGenre is not in the Song Library... ")
+                time.sleep(1.5)
+                playlist_genre = input("\nSelect desired genre: ")
+
+            
+
+
 
         elif choice == "3":
             print()
@@ -257,6 +278,11 @@ def create_playlist():   #------------------------------ Create A Playlist -----
 
         elif choice.lower() == "e":
             return
+        
+        else:
+            print("\nThat's not one of the options...")
+            time.sleep(1.5)
+            continue 
 
 def view_delete_playlists():   #------------------------------ View And Delete Playlists --------------------------
 
