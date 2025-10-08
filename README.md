@@ -1,5 +1,4 @@
-🎵Basic Song Library Project
+# 🎵 Basic Song Library Project
 
-For A-Levels
-
-FYI Credentials has nothing of important
+- For A-Levels
+- FYI Credentials has nothing of important
