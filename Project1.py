@@ -5,7 +5,7 @@ import random         #library to randomly select songs for playlist creation
 def title_func(song):               #this is essentialy a function that will be used to sort the dictionaries within the list. The inputs are the dicts...
     return song["title"]            #...and the outputs are the titles of the songs for each dict
 
-def convert_length_s(items):                    #function to add song times and return back a string, a LIST of STRINGS is needed
+def convert_length_s(items):                    #function to add song times and return back the seconds, a LIST of STRINGS is needed in mm:ss format
     total_seconds = 0                           #counter is set to 0
     for string in items:
         minutes, seconds = string.split(":")                             #the minutes and seconds are split at the : and placed into the corresponding variable (unpacking)
@@ -95,7 +95,7 @@ def startup():   #------------------------------ Startup -----------------------
                 data["favourite_genre"] = users[username].get("favourite_genre", "")    #loads the user's fav genre, if it does not exist it creates an empty string
                 data["playlists"] = users[username].get("playlists", {})      #gets the playlists dictionary for that user, if it does not exist it creates an empty one
                 data["username"] = username
-                time.sleep(1.5)
+                time.sleep(0.75)
                 
                 return data
 
@@ -108,6 +108,7 @@ def main_menu():   #------------------------------ Main Menu -------------------
     print("4 : Create A Playlist")
     print("5 : View And Edit Playlists")
     print("6 : Save Songs")
+    print("7 : Creator Access")
     print("E : Exit")
     choice = input("\nChoice --> ")               #main menu function that prints the options and takes the input
     return choice                                 #returns the choice to be used in the main program
@@ -195,7 +196,6 @@ def create_playlist():   #------------------------------ Create A Playlist -----
         print("\n-- Create A Playlist --")
         print("\n1 : Create Via Time Limit")
         print("2 : Create Via Genre")
-        print("3 : Create Via Added Songs")
         print("\nE : Exit")
         choice = input("\nChoice --> ")
         
@@ -257,24 +257,25 @@ def create_playlist():   #------------------------------ Create A Playlist -----
                 playlist_name = input("\nName of the playlist:")
 
             print("")
-            genre = {song["genre"] for song in song_library}
-            for name in genre:
-                print(f"- {name}")
+            genre = {song["genre"] for song in song_library}    #creates a set of all the genres in the song library, sets automatically remove duplicates
+            for name in genre:                                  #a loop to go through all the genres in the set
+                print(f"- {name}")                              #prints all the genres that exist
             
-            playlist_genre = input("\nSelect desired genre: ")
-            
-            while playlist_genre not in genre:
+            playlist_genre = input("\nSelect desired genre: ")            
+            while playlist_genre.lower() not in genre:               #checks if that genre exists in the song library
                 print("\nGenre is not in the Song Library... ")
                 time.sleep(1.5)
                 playlist_genre = input("\nSelect desired genre: ")
 
-            
-
-
-
-        elif choice == "3":
-            print()
-            continue
+            playlist_songs = [song for song in song_library if song["genre"] == playlist_genre]      #creates a list of all the songs with that genre
+            while len(playlist_songs) > 5:                                                           #if there are more than 5 songs in that genre...
+                playlist_songs.pop()                                                                 #...songs are removed from the end of the list until there are 5
+            playlist_length_s = convert_length_s([song["length"] for song in playlist_songs])        #calculates the total length of all those songs in seconds
+            playlists.update({playlist_name : {"songs" : playlist_songs , "length" : f"{playlist_length_s // 60}:{playlist_length_s % 60:02d}" , "num_songs" : int(len(playlist_songs))}})     #updates the playlists dictionary with a new playlist, with the key for it being its name
+            save_json_playlist()
+            print("\nCreated Successfully")
+            time.sleep(1.5)
+            continue                            #goes back to the start of the function 
 
         elif choice.lower() == "e":
             return
@@ -405,6 +406,41 @@ def save_songs():   #------------------------------ Save Songs -----------------
             time.sleep(1.5)
             continue
 
+def creator_info():   #------------------------------ Creator Info --------------------------
+
+    while True:
+        print("\n-- Creator Info --")
+        
+        key = input("\nEnter the key to view creator info: ")               #asks for a key to view the info
+        try:
+            with open("credentials.json", "r") as credentials_json:         #tries to open the json file to read the existing key
+                credentials = json.load(credentials_json)                  #loads the json file into a dictionary
+        except (FileNotFoundError, json.decoder.JSONDecodeError):          #if the file does not exist or is empty it creates an empty json file and an empty dictionary
+            print("\nAn error has occured...")
+            time.sleep(1.5)
+            return
+        
+        if key != credentials["key"]:
+            print("Access Denied...")
+            time.sleep(1.5)
+            return
+        
+        print("\n-- Details --\n")
+
+        genre_set = {song["genre"] for song in song_library}
+        for genre in genre_set:
+            song_times = [songs["length"] for songs in song_library if songs["genre"] == genre]
+            avg_song_time = convert_length_s(song_times) / len(song_times)
+            avg_song_time = int(round(avg_song_time))
+            print(f"{genre} - {avg_song_time // 60}:{avg_song_time % 60:02d} minute average song length")
+
+        print("")
+        print("Code by Ianis... and the rest...")
+        print("Flowchart by Ianis... maybe maks... and the rest...")
+        print("Slides by Ianis... maybe adeeb... and the rest...")
+        input("\nType anything to leave")
+        return
+                
 def exit_program():   #------------------------------ Exit Program --------------------------
 
     save_json_playlist()
@@ -484,6 +520,11 @@ while True:
         save_songs()
         choice = main_menu()
 
+    elif choice == "7":
+
+        creator_info()
+        choice = main_menu()
+
     elif choice.lower() == "e":
 
         exit_program()               #runs any exit code before breaking the loop
@@ -500,8 +541,7 @@ while True:
 
 # Continue will always go back to the start of the loop it is in, break will exit the loop it is in (with exceptions)
 # True loops are used so the memory does not get overloaded with function calls
-# globals are used to changes variables in functions
+# globals are used to changes variables in functions only if needed, I only returned values in startup()
 # classes could be used, a bit too complicated for my liking
 # functions make edits easier and cleaner
-# Placeholders are being used
 # try excepts are used to prevent crashes
