@@ -157,7 +157,7 @@ def edit_profile():   #------------------------------ Edit Profile -------------
             with open("users.json", "r") as users_json:
                 users = json.load(users_json)                    #opens the json file in read mode and loads it into a dictionary
             
-            users[username]["genre"] = favourite_genre           #updates the users dictionary with the new favourite genre
+            users[username]["favourite_genre"] = favourite_genre           #updates the users dictionary with the new favourite genre
             
             with open("users.json", "w") as users_json:         #opens the json file in write mode and dumps the updated users dictionary into it
                 json.dump(users, users_json, indent = 4)            
@@ -262,7 +262,7 @@ def create_playlist():   #------------------------------ Create A Playlist -----
                 print(f"- {name}")                              #prints all the genres that exist
             
             playlist_genre = input("\nSelect desired genre: ")            
-            while playlist_genre.lower() not in genre:               #checks if that genre exists in the song library
+            while playlist_genre not in genre:               #checks if that genre exists in the song library
                 print("\nGenre is not in the Song Library... ")
                 time.sleep(1.5)
                 playlist_genre = input("\nSelect desired genre: ")
@@ -420,18 +420,18 @@ def creator_info():   #------------------------------ Creator Info -------------
             time.sleep(1.5)
             return
         
-        if key != credentials["key"]:
-            print("Access Denied...")
+        if key != credentials["key"]:                  #if the key is incorrect   
+            print("Access Denied...")                  #doesn't let you in     
             time.sleep(1.5)
-            return
+            return                                     #returns back outside the function
         
         print("\n-- Details --\n")
 
-        genre_set = {song["genre"] for song in song_library}
+        genre_set = {song["genre"] for song in song_library}      #creates a set of all the genres in the song library, sets automatically remove duplicates
         for genre in genre_set:
-            song_times = [songs["length"] for songs in song_library if songs["genre"] == genre]
-            avg_song_time = convert_length_s(song_times) / len(song_times)
-            avg_song_time = int(round(avg_song_time))
+            song_times = [songs["length"] for songs in song_library if songs["genre"] == genre]            #creates a list of all the song lengths in that genre
+            avg_song_time = convert_length_s(song_times) / len(song_times)                                 #calculates the average song length in seconds
+            avg_song_time = int(round(avg_song_time))                                                      #rounds the average song length to the nearest whole number
             print(f"{genre} - {avg_song_time // 60}:{avg_song_time % 60:02d} minute average song length")
 
         print("")
