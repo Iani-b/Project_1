@@ -5,6 +5,6 @@
 
 ## Flowchart
 
-- Pretty Similair to the actual code
+- Pretty similar to the actual code
 
 ![alt text](https://github.com/Iani-b/project_1/blob/main/More%20things/project_1.drawio.png?raw=true)
